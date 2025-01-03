@@ -6,13 +6,26 @@ variable "region" {
   default     = "us-west-1"
 }
 
-variable "instance_type" {
-  description = "Type of EC2 instance to provision"
-  default     = "t2.micro"
+variable "bucket_name" {
+  description = "jyo"
+  default     = "my-terraform-bucket"
 }
 
-variable "instance_name" {
-  description = "EC2 instance name"
-  default     = "Provisioned by Terraform"
+variable "acl" {
+  description = "Access control list for the S3 bucket"
+  default     = "private"
 }
 
+provider "aws" {
+  region = var.region
+}
+
+resource "aws_s3_bucket" "bucket" {
+  bucket = var.bucket_name
+  acl    = var.acl
+
+  tags = {
+    Name        = "Terraform S3 Bucket"
+    Environment = "Development"
+  }
+}
